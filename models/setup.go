@@ -18,8 +18,11 @@ func Connect() {
 		panic("Failed to connect to database")
 	}
 
-	err = database.AutoMigrate(&Category{}, &Ingredient{})
-
+	err = database.SetupJoinTable(&Recipe{}, "Ingredients", &RecipeIngredients{})
+	if err != nil {
+		return
+	}
+	err = database.AutoMigrate(&Category{}, &Ingredient{}, &Recipe{}, &RecipeIngredients{})
 	if err != nil {
 		return
 	}
