@@ -24,18 +24,6 @@ func IndexCategories(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": categories})
 }
 
-// GET
-func GetCategory(c *gin.Context) {
-	//Get Reccord
-	var category models.Category
-	if err := models.DB.First(&category, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": category})
-}
-
 // POST
 func CreateCategory(c *gin.Context) {
 	// Validate imput

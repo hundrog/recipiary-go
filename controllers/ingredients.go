@@ -24,18 +24,6 @@ func IndexIngredients(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": ingredients})
 }
 
-// GET
-func GetIngredient(c *gin.Context) {
-	//Get Reccord
-	var ingredient models.Ingredient
-	if err := models.DB.Joins("Category").First(&ingredient, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": ingredient})
-}
-
 // POST
 func CreateIngredient(c *gin.Context) {
 	// Validate imput
