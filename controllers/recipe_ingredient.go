@@ -39,14 +39,21 @@ func InsertRecipeIngredient(c *gin.Context) {
 	recipeIngredient := models.RecipeIngredients{RecipeID: int(recipe.ID), IngredientID: int(ingredient.ID), Amount: input.Amount}
 
 	models.DB.Create(&recipeIngredient)
+	c.JSON(http.StatusOK, gin.H{"data": recipeIngredient})
 }
 
 func UpdateRecipeIngredient(c *gin.Context) {
 	// Validate IDs
 	recipeID, err1 := strconv.Atoi(c.Param("id"))
-	ingredientID, err2 := strconv.Atoi(c.Param("recipeID"))
+	ingredientID, err2 := strconv.Atoi(c.Param("ingredientID"))
 	if err2 != nil || err1 != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe or Ingredient is not valid"})
+		return
+	}
+	// Validate Input
+	var input UpdateRecipeIngredientInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	// Fetch recipe ingredient
@@ -54,12 +61,13 @@ func UpdateRecipeIngredient(c *gin.Context) {
 	if err := models.DB.Where(&models.RecipeIngredients{
 		RecipeID:     recipeID,
 		IngredientID: ingredientID,
-	}); err != nil {
+	}).First(&recipeIngredient).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe or Ingredient not found"})
 		return
 	}
 	// Update recipe ingredient
-	models.DB.Create(&recipeIngredient)
+	models.DB.Model(&recipeIngredient).Updates(input)
+	c.JSON(http.StatusOK, gin.H{"data": recipeIngredient})
 }
 
 // DELETE

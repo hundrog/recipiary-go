@@ -34,7 +34,7 @@ func main() {
 
 	r.POST("/recipes/:id/ingredients", controllers.InsertRecipeIngredient)
 	r.PATCH("/recipes/:id/ingredients/:ingredientID", controllers.UpdateRecipeIngredient)
-	r.DELETE("/recipes/:id/ingredients/:ingredient_id", controllers.DeleteRecipeIngredient)
+	r.DELETE("/recipes/:id/ingredients/:ingredientID", controllers.DeleteRecipeIngredient)
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
