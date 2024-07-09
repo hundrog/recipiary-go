@@ -20,7 +20,7 @@ type UpdateIngredientInput struct {
 // INDEX
 func IndexIngredients(c *gin.Context) {
 	var ingredients []models.Ingredient
-	models.DB.Preload("Category").Find(&ingredients)
+	models.DB.Joins("Category").Find(&ingredients)
 
 	c.JSON(http.StatusOK, gin.H{"data": ingredients})
 }
