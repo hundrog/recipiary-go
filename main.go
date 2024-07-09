@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"recipiary/controllers"
@@ -9,6 +10,7 @@ import (
 
 func main() {
 	r := gin.Default()
+	r.Use(cors.Default())
 	models.Connect()
 
 	r.GET("/ping", func(c *gin.Context) {
@@ -19,11 +21,13 @@ func main() {
 
 	r.GET("/categories", controllers.IndexCategories)
 	r.POST("/categories", controllers.CreateCategory)
+	r.GET("/categories/:id", controllers.GetCategory)
 	r.PATCH("/categories/:id", controllers.UpdateCategory)
 	r.DELETE("/categories/:id", controllers.DeleteCategory)
 
 	r.GET("/ingredients", controllers.IndexIngredients)
 	r.POST("/ingredients", controllers.CreateIngredient)
+	r.GET("/ingredients/:id", controllers.GetIngredient)
 	r.PATCH("/ingredients/:id", controllers.UpdateIngredient)
 	r.DELETE("/ingredients/:id", controllers.DeleteIngredient)
 

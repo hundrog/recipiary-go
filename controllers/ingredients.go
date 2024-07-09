@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"recipiary/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 type CreateIngredientInput struct {
@@ -22,6 +23,18 @@ func IndexIngredients(c *gin.Context) {
 	models.DB.Preload("Category").Find(&ingredients)
 
 	c.JSON(http.StatusOK, gin.H{"data": ingredients})
+}
+
+// GET
+func GetIngredient(c *gin.Context) {
+	//Get Reccord
+	var ingredient models.Ingredient
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&ingredient).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": ingredient})
 }
 
 // POST
@@ -52,14 +65,13 @@ func CreateIngredient(c *gin.Context) {
 func UpdateIngredient(c *gin.Context) {
 	//Get Reccord
 	var ingredient models.Ingredient
-	if err := models.DB.Joins("Category").First(&ingredient, c.Param("id")).Error; err != nil {
+	if err := models.DB.First(&ingredient, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
 
 	// Validate imput
 	var input UpdateIngredientInput
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -73,8 +85,10 @@ func UpdateIngredient(c *gin.Context) {
 	}
 
 	// Update ingredient
-	values := models.Ingredient{Name: input.Name, CategoryId: input.CategoryId, Category: category}
-	models.DB.Model(&ingredient).Updates(&values)
+	err := models.DB.Model(&ingredient).Updates(input)
+	if err != nil {
+		ingredient.Category = category
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": ingredient})
 }

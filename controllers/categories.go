@@ -24,6 +24,18 @@ func IndexCategories(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": categories})
 }
 
+// INDEX
+func GetCategory(c *gin.Context) {
+	//Get Reccord
+	var category models.Category
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": category})
+}
+
 // POST
 func CreateCategory(c *gin.Context) {
 	// Validate imput
@@ -48,10 +60,8 @@ func UpdateCategory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
-
 	// Validate imput
 	var input UpdateCategoryImput
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -69,7 +79,6 @@ func DeleteCategory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
-
 	// Delete category
 	models.DB.Delete(&category)
 
