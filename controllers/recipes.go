@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"recipiary/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 type CreateRecipeInput struct {
@@ -23,6 +24,18 @@ func IndexRecipes(c *gin.Context) {
 	models.DB.Preload("Ingredients.Category").Find(&recipes)
 
 	c.JSON(http.StatusOK, gin.H{"data": recipes})
+}
+
+// GET
+func GetRecipe(c *gin.Context) {
+	//Get Reccord
+	var recipe models.Recipe
+	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": recipe})
 }
 
 // POST

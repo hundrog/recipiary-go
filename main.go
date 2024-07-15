@@ -33,9 +33,11 @@ func main() {
 
 	r.GET("/recipes", controllers.IndexRecipes)
 	r.POST("/recipes", controllers.CreateRecipe)
+	r.GET("/recipes/:id", controllers.GetRecipe)
 	r.PATCH("/recipes/:id", controllers.UpdateRecipe)
 	r.DELETE("/recipes/:id", controllers.DeleteRecipe)
 
+	r.GET("/recipes/:id/ingredients", controllers.GetRecipeIngredients)
 	r.POST("/recipes/:id/ingredients", controllers.InsertRecipeIngredient)
 	r.PATCH("/recipes/:id/ingredients/:ingredientID", controllers.UpdateRecipeIngredient)
 	r.DELETE("/recipes/:id/ingredients/:ingredientID", controllers.DeleteRecipeIngredient)

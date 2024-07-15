@@ -16,6 +16,38 @@ type UpdateRecipeIngredientInput struct {
 	Amount int `binding:"required"`
 }
 
+type RecipeIngredientsResponse struct {
+	ID      int
+	Name    string
+	Portion string
+	Amount  int
+}
+
+// GET
+func GetRecipeIngredients(c *gin.Context) {
+	// var recipe models.Recipe
+	// models.DB.Preload("Ingredients.Category").Preload("RecipeIngredients").First(&recipe, c.Param("id"))
+
+	var recipeIngredients []RecipeIngredientsResponse
+
+	models.DB.Raw(`
+        SELECT
+		ingredients.id,
+		ingredients.name AS name,
+		ingredients.portion AS portion,
+		recipe_ingredients.recipe_id,
+		recipe_ingredients.ingredient_id,
+		recipe_ingredients.amount AS amount
+        FROM 
+            recipe_ingredients
+        JOIN 
+            ingredients ON recipe_ingredients.ingredient_id = ingredients.id
+        WHERE 
+            recipe_ingredients.recipe_id = ?`, c.Param("id")).Scan(&recipeIngredients)
+
+	c.JSON(http.StatusOK, gin.H{"data": recipeIngredients})
+}
+
 // POST
 func InsertRecipeIngredient(c *gin.Context) {
 	// Validate Input

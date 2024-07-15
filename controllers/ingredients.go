@@ -9,11 +9,13 @@ import (
 
 type CreateIngredientInput struct {
 	Name       string `binding:"required"`
+	Portion    string `binding:"required"`
 	CategoryId int    `binding:"required"`
 }
 
 type UpdateIngredientInput struct {
 	Name       string
+	Portion    string
 	CategoryId int
 }
 
@@ -55,7 +57,7 @@ func CreateIngredient(c *gin.Context) {
 	}
 
 	// Create ingredient
-	ingredient := models.Ingredient{Name: input.Name, CategoryId: input.CategoryId, Category: category}
+	ingredient := models.Ingredient{Name: input.Name, CategoryId: input.CategoryId, Portion: input.Portion, Category: category}
 	models.DB.Create(&ingredient)
 
 	c.JSON(http.StatusOK, gin.H{"data": ingredient})
@@ -78,8 +80,13 @@ func UpdateIngredient(c *gin.Context) {
 	}
 
 	// Retrieve category
+	categoryId := input.CategoryId
+	if input.CategoryId <= 0 {
+		categoryId = ingredient.CategoryId
+	}
+
 	var category models.Category
-	if err := models.DB.Where("id = ?", input.CategoryId).First(&category).Error; err != nil {
+	if err := models.DB.Where("id = ?", categoryId).First(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Category doesn't exists"})
 		return
 	}
