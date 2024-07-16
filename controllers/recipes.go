@@ -8,14 +8,15 @@ import (
 )
 
 type CreateRecipeInput struct {
-	Name          string `binding:"required"`
-	Description   string `binding:"required"`
-	IngredientIds []int  `binding:"required"`
+	Name        string `binding:"required"`
+	Description string `binding:"required"`
+	ImageUrl    string
 }
 
 type UpdateRecipeInput struct {
 	Name        string
 	Description string
+	ImageUrl    string
 }
 
 // INDEX
@@ -49,14 +50,14 @@ func CreateRecipe(c *gin.Context) {
 	}
 
 	// Retrieve Ingredients
-	var ingredients []models.Ingredient
-	if err := models.DB.Find(&ingredients, input.IngredientIds).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "One or more Ingredient doesn't exists"})
-		return
-	}
+	// var ingredients []models.Ingredient
+	// if err := models.DB.Find(&ingredients, input.IngredientIds).Error; err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "One or more Ingredient doesn't exists"})
+	// 	return
+	// }
 
 	// Create recipe
-	recipe := models.Recipe{Name: input.Name, Description: input.Description, Ingredients: ingredients}
+	recipe := models.Recipe{Name: input.Name, Description: input.Description, ImageUrl: input.ImageUrl}
 	models.DB.Create(&recipe)
 
 	c.JSON(http.StatusOK, gin.H{"data": recipe})
@@ -78,9 +79,9 @@ func UpdateRecipe(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	// fmt.Printf("%+v\n", input)
 	// Update recipe
-	values := models.Recipe{Name: input.Name, Description: input.Description}
+	values := models.Recipe{Name: input.Name, Description: input.Description, ImageUrl: input.ImageUrl}
 	models.DB.Model(&recipe).Updates(&values)
 
 	c.JSON(http.StatusOK, gin.H{"data": recipe})
