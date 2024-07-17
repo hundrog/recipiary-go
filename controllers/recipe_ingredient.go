@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"recipiary/models"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type InsertRecipeIngredientInput struct {
-	IngredientId int `binding:"required"`
-	Amount       int `binding:"required"`
+	ID     int `binding:"required"`
+	Amount int `binding:"required"`
 }
 
 type UpdateRecipeIngredientInput struct {
@@ -63,21 +64,25 @@ func InsertRecipeIngredient(c *gin.Context) {
 		return
 	}
 	var ingredient models.Ingredient
-	if err := models.DB.First(&ingredient, input.IngredientId).Error; err != nil {
+	if err := models.DB.First(&ingredient, input.ID).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Ingredient not found"})
 		return
 	}
 	// Insert recipe ingredient
 	recipeIngredient := models.RecipeIngredients{RecipeID: int(recipe.ID), IngredientID: int(ingredient.ID), Amount: input.Amount}
+	if err := models.DB.Create(&recipeIngredient).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	models.DB.Create(&recipeIngredient)
-	c.JSON(http.StatusOK, gin.H{"data": recipeIngredient})
+	responseIngredient := RecipeIngredientsResponse{ID: int(ingredient.ID), Name: ingredient.Name, Portion: ingredient.Portion, Amount: recipeIngredient.Amount}
+	c.JSON(http.StatusOK, gin.H{"data": responseIngredient})
 }
 
 func UpdateRecipeIngredient(c *gin.Context) {
 	// Validate IDs
 	recipeID, err1 := strconv.Atoi(c.Param("id"))
-	ingredientID, err2 := strconv.Atoi(c.Param("ingredientID"))
+	ingredientID, err2 := strconv.Atoi(c.Param("ingredientId"))
 	if err2 != nil || err1 != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe or Ingredient is not valid"})
 		return
@@ -111,7 +116,7 @@ func DeleteRecipeIngredient(c *gin.Context) {
 		return
 	}
 	var ingredient models.Ingredient
-	if err := models.DB.First(&ingredient, c.Param("ingredient_id")).Error; err != nil {
+	if err := models.DB.First(&ingredient, c.Param("ingredientId")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Ingredient not found"})
 		return
 	}
