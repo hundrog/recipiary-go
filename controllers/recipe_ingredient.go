@@ -93,6 +93,11 @@ func UpdateRecipeIngredient(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	var ingredient models.Ingredient
+	if err := models.DB.First(&ingredient, ingredientID).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Ingredient not found"})
+		return
+	}
 	// Fetch recipe ingredient
 	var recipeIngredient models.RecipeIngredients
 	if err := models.DB.Where(&models.RecipeIngredients{
@@ -103,8 +108,12 @@ func UpdateRecipeIngredient(c *gin.Context) {
 		return
 	}
 	// Update recipe ingredient
-	models.DB.Model(&recipeIngredient).Updates(input)
-	c.JSON(http.StatusOK, gin.H{"data": recipeIngredient})
+	if err := models.DB.Model(&recipeIngredient).Updates(input).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	responseIngredient := RecipeIngredientsResponse{ID: int(ingredient.ID), Name: ingredient.Name, Portion: ingredient.Portion, Amount: recipeIngredient.Amount}
+	c.JSON(http.StatusOK, gin.H{"data": responseIngredient})
 }
 
 // DELETE

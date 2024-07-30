@@ -13,7 +13,7 @@ type CreateInstructionInput struct {
 type CreateInstructionBulkInput struct {
 	Content []string `binding:"required"`
 }
-type UpdateIntructionInput struct {
+type UpdateInstructionInput struct {
 	Content string
 }
 
@@ -36,22 +36,45 @@ func IndexInstructions(c *gin.Context) {
 func CreateInstruction(c *gin.Context) {
 	// Validate imput
 	var input CreateInstructionInput
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	// Retrieve recipe
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe doesn't exists"})
 		return
 	}
-
 	// Create ingredient
 	instruction := models.Instruction{RecipeID: int(recipe.ID), Content: input.Content}
 	models.DB.Create(&instruction)
+
+	c.JSON(http.StatusOK, gin.H{"data": instruction})
+}
+
+// PATCH
+func UpdateInstruction(c *gin.Context) {
+	// Validate imput
+	var input UpdateInstructionInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// Retrieve recipe
+	var recipe models.Recipe
+	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe doesn't exists"})
+		return
+	}
+	// Retrieve Instruction
+	var instruction models.Instruction
+	if err := models.DB.First(&instruction, c.Param("instruction_id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Instruction doesn't exists"})
+		return
+	}
+	// Create ingredient
+	models.DB.Model(&instruction).Updates(input)
 
 	c.JSON(http.StatusOK, gin.H{"data": instruction})
 }
@@ -83,4 +106,23 @@ func CreateInstructionBulk(c *gin.Context) {
 	models.DB.Create(&instructions)
 
 	c.JSON(http.StatusOK, gin.H{"data": instructions})
+}
+
+// DELETE
+func DeleteInstruction(c *gin.Context) {
+	// Retrieve recipe
+	var recipe models.Recipe
+	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe doesn't exists"})
+		return
+	}
+
+	var instruction models.Instruction
+	if err := models.DB.First(&instruction, c.Param("instructionId")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Instruction doesn't exists"})
+		return
+	}
+
+	models.DB.Delete(&instruction)
+	c.JSON(http.StatusOK, gin.H{"data": true})
 }
