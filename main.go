@@ -46,6 +46,7 @@ func main() {
 	r.POST("/recipes/:id/instructions", controllers.CreateInstruction)
 	r.POST("/recipes/:id/instructions_bulk", controllers.CreateInstructionBulk)
 	r.PATCH("/recipes/:id/instructions/:instructionId", controllers.UpdateInstruction)
+	r.PATCH("/recipes/:id/instructions/position", controllers.UpdateInstructionsOrder)
 	r.DELETE("/recipes/:id/instructions/:instructionId", controllers.DeleteInstruction)
 
 	r.Run() // listen and serve on 0.0.0.0:8080

@@ -21,4 +21,5 @@ type Instruction struct {
 	gorm.Model
 	Content  string
 	RecipeID int
+	Position int `default:"0"`
 }
