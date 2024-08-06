@@ -49,5 +49,6 @@ func main() {
 	r.PATCH("/recipes/:id/instructions/position", controllers.UpdateInstructionsOrder)
 	r.DELETE("/recipes/:id/instructions/:instructionId", controllers.DeleteInstruction)
 
+	r.GET("/images", controllers.SearchPhotos)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
