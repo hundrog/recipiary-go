@@ -47,6 +47,7 @@ func buildUri(c *gin.Context) (uri string) {
 	v := url.Values{}
 	v.Add("query", c.Query("search"))
 	v.Add("page", c.Query("page"))
+	v.Add("per_page", c.Query("size"))
 	query := v.Encode()
 	uri = fmt.Sprintf("%s?%s", base, query)
 	fmt.Println(uri)
