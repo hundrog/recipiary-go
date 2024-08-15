@@ -29,7 +29,7 @@ func IndexRecipes(c *gin.Context) {
 
 // GET
 func GetRecipe(c *gin.Context) {
-	//Get Reccord
+	//Get record
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -41,7 +41,7 @@ func GetRecipe(c *gin.Context) {
 
 // POST
 func CreateRecipe(c *gin.Context) {
-	// Validate imput
+	// Validate input
 	var input CreateRecipeInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -65,14 +65,14 @@ func CreateRecipe(c *gin.Context) {
 
 // UPDATE
 func UpdateRecipe(c *gin.Context) {
-	//Get Reccord
+	//Get record
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
 
-	// Validate imput
+	// Validate input
 	var input UpdateRecipeInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -88,7 +88,7 @@ func UpdateRecipe(c *gin.Context) {
 }
 
 func DeleteRecipe(c *gin.Context) {
-	//Get Reccord
+	//Get record
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})

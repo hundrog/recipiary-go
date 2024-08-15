@@ -44,7 +44,7 @@ func IndexInstructions(c *gin.Context) {
 
 // POST
 func CreateInstruction(c *gin.Context) {
-	// Validate imput
+	// Validate input
 	var input CreateInstructionInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -65,7 +65,7 @@ func CreateInstruction(c *gin.Context) {
 
 // PATCH
 func UpdateInstruction(c *gin.Context) {
-	// Validate imput
+	// Validate input
 	var input UpdateInstructionInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -112,7 +112,7 @@ func UpdateInstructionsOrder(c *gin.Context) {
 
 // POST
 func CreateInstructionBulk(c *gin.Context) {
-	// Validate imput
+	// Validate input
 	var input CreateInstructionBulkInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {

@@ -6,12 +6,12 @@ import (
 	"recipiary/models"
 )
 
-type CreateCategoryImput struct {
+type CreateCategoryInput struct {
 	Name  string `binding:"required"`
 	Color string `binding:"required"`
 }
 
-type UpdateCategoryImput struct {
+type UpdateCategoryInput struct {
 	Name  string
 	Color string
 }
@@ -26,7 +26,7 @@ func IndexCategories(c *gin.Context) {
 
 // INDEX
 func GetCategory(c *gin.Context) {
-	//Get Reccord
+	//Get record
 	var category models.Category
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -38,8 +38,8 @@ func GetCategory(c *gin.Context) {
 
 // POST
 func CreateCategory(c *gin.Context) {
-	// Validate imput
-	var input CreateCategoryImput
+	// Validate input
+	var input CreateCategoryInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -54,14 +54,14 @@ func CreateCategory(c *gin.Context) {
 
 // UPDATE
 func UpdateCategory(c *gin.Context) {
-	//Get Reccord
+	//Get record
 	var category models.Category
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
-	// Validate imput
-	var input UpdateCategoryImput
+	// Validate input
+	var input UpdateCategoryInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -73,7 +73,7 @@ func UpdateCategory(c *gin.Context) {
 }
 
 func DeleteCategory(c *gin.Context) {
-	//Get Reccord
+	//Get record
 	var category models.Category
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
