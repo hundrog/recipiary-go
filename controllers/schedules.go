@@ -14,8 +14,8 @@ type CreateScheduleInput struct {
 }
 
 type UpdateScheduleInput struct {
-	FromDate string
-	ToDate   string
+	StartDate time.Time `binding:"ltefield=FinalDate" time_format:"2006-01-02"`
+	FinalDate time.Time `time_format:"2006-01-02"`
 }
 
 // INDEX
@@ -41,4 +41,48 @@ func CreateSchedule(c *gin.Context) {
 	models.DB.Create(&schedule)
 
 	c.JSON(http.StatusOK, gin.H{"data": schedule})
+}
+
+func GetSchedule(c *gin.Context) {
+	// Get record
+	var schedule models.Schedule
+	if err := models.DB.First(&schedule, c.Param("id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": schedule})
+}
+
+func UpdateSchedule(c *gin.Context) {
+	// Get record
+	var schedule models.Schedule
+	if err := models.DB.First(&schedule, c.Param("id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return
+	}
+	// Validate input
+	var input UpdateScheduleInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// Update schedule
+	models.DB.Model(&schedule).Updates(input)
+
+	c.JSON(http.StatusOK, gin.H{"data": schedule})
+}
+
+func DeleteSchedule(c *gin.Context) {
+	//Get record
+	var schedule models.Schedule
+	if err := models.DB.First(&schedule, c.Param("id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return
+	}
+	// Delete category
+	models.DB.Delete(&schedule)
+
+	c.JSON(http.StatusOK, gin.H{"data": true})
 }
