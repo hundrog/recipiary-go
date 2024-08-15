@@ -57,5 +57,10 @@ func main() {
 	r.PATCH("/schedules/:id", controllers.UpdateSchedule)
 	r.DELETE("/schedules/:id", controllers.DeleteSchedule)
 
+	r.POST("/schedules/:id/recipes", controllers.CreateScheduleRecipes)
+	r.PATCH("/schedules/:id/recipes", controllers.UpdateScheduleRecipes)
+	r.DELETE("/schedules/:id/recipes", controllers.DeleteScheduleRecipes)
+	r.DELETE("/schedules/:id/clear", controllers.ClearScheduleRecipes)
+
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
