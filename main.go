@@ -50,5 +50,7 @@ func main() {
 	r.DELETE("/recipes/:id/instructions/:instructionId", controllers.DeleteInstruction)
 
 	r.GET("/images", controllers.SearchPhotos)
+	r.GET("/schedules", controllers.IndexSchedules)
+	r.POST("/schedules", controllers.CreateSchedule)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

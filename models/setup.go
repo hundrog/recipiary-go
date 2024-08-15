@@ -30,7 +30,7 @@ func Connect() {
 	if err != nil {
 		return
 	}
-	err = database.AutoMigrate(&Category{}, &Ingredient{}, &Recipe{}, &RecipeIngredients{}, &Instruction{})
+	err = database.AutoMigrate(&Category{}, &Ingredient{}, &Recipe{}, &RecipeIngredients{}, &Instruction{}, &Schedule{})
 	if err != nil {
 		return
 	}
