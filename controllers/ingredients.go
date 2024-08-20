@@ -22,14 +22,14 @@ type UpdateIngredientInput struct {
 // INDEX
 func IndexIngredients(c *gin.Context) {
 	var ingredients []models.Ingredient
-	models.DB.Scopes(models.Paginate(c)).Joins("Category").Find(&ingredients)
+	models.DB.Joins("Category").Find(&ingredients)
 
 	c.JSON(http.StatusOK, gin.H{"data": ingredients})
 }
 
 // GET
 func GetIngredient(c *gin.Context) {
-	//Get Record
+	// Get Record
 	var ingredient models.Ingredient
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&ingredient).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -65,7 +65,7 @@ func CreateIngredient(c *gin.Context) {
 
 // UPDATE
 func UpdateIngredient(c *gin.Context) {
-	//Get Record
+	// Get Record
 	var ingredient models.Ingredient
 	if err := models.DB.First(&ingredient, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -101,7 +101,7 @@ func UpdateIngredient(c *gin.Context) {
 }
 
 func DeleteIngredient(c *gin.Context) {
-	//Get Record
+	// Get Record
 	var ingredient models.Ingredient
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&ingredient).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})

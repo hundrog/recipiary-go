@@ -43,7 +43,7 @@ func SearchPhotos(c *gin.Context) {
 }
 
 func buildUri(c *gin.Context) (uri string) {
-	var base string = "https://api.unsplash.com/search/photos"
+	base := "https://api.unsplash.com/search/photos"
 	v := url.Values{}
 	v.Add("query", c.Query("search"))
 	v.Add("page", c.Query("page"))
@@ -61,13 +61,11 @@ func unsplashRequest(c *gin.Context) ([]byte, error) {
 	req, err := http.NewRequest("GET", buildUri(c), nil)
 	if err != nil {
 		return nil, err
-
 	}
 	req.Header.Add("Authorization", "Client-ID LQk7MJuPVUOrDAywuSgfUbAEf72vg8Wxig3XFtlUfJs")
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
-
 	}
 	body, err := io.ReadAll(res.Body)
 	res.Body.Close()

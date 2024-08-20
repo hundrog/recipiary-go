@@ -54,7 +54,7 @@ func InsertRecipeIngredient(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	//Get records
+	// Get records
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe not found"})
@@ -115,7 +115,7 @@ func UpdateRecipeIngredient(c *gin.Context) {
 
 // DELETE
 func DeleteRecipeIngredient(c *gin.Context) {
-	//Get records
+	// Get records
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Recipe not found"})
