@@ -21,7 +21,7 @@ type UpdateScheduleInput struct {
 // INDEX
 func IndexSchedules(c *gin.Context) {
 	var schedules []models.Schedule
-	models.DB.Preload("Recipes").Find(&schedules)
+	models.DB.Preload("Recipes").Order("start_date").Find(&schedules)
 
 	c.JSON(http.StatusOK, gin.H{"data": schedules})
 }
@@ -46,7 +46,7 @@ func CreateSchedule(c *gin.Context) {
 func GetSchedule(c *gin.Context) {
 	// Get record
 	var schedule models.Schedule
-	if err := models.DB.First(&schedule, c.Param("id")).Error; err != nil {
+	if err := models.DB.Preload("Recipes").First(&schedule, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
@@ -75,7 +75,7 @@ func UpdateSchedule(c *gin.Context) {
 }
 
 func DeleteSchedule(c *gin.Context) {
-	//Get record
+	// Get record
 	var schedule models.Schedule
 	if err := models.DB.First(&schedule, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})

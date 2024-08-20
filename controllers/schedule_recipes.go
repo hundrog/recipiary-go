@@ -24,7 +24,7 @@ func CreateScheduleRecipes(c *gin.Context) {
 	// Update Associations
 	models.DB.Model(&schedule).Association("Recipes").Append(recipes)
 
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusOK, gin.H{"data": schedule})
 }
 
 // PATCH
@@ -38,7 +38,7 @@ func UpdateScheduleRecipes(c *gin.Context) {
 	// Update Associations
 	models.DB.Model(&schedule).Association("Recipes").Replace(recipes)
 
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusOK, gin.H{"data": schedule})
 }
 
 // DELETE
@@ -52,7 +52,7 @@ func DeleteScheduleRecipes(c *gin.Context) {
 	// Update Associations
 	models.DB.Model(&schedule).Association("Recipes").Delete(recipes)
 
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusOK, gin.H{"data": schedule})
 }
 
 // DELETE
@@ -66,7 +66,7 @@ func ClearScheduleRecipes(c *gin.Context) {
 	// Update Associations
 	models.DB.Model(&schedule).Association("Recipes").Clear()
 
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusOK, gin.H{"data": schedule})
 }
 
 func getScheduleAndRecipes(c *gin.Context) (schedule models.Schedule, recipes []models.Recipe, error error) {
@@ -89,6 +89,7 @@ func getScheduleAndRecipes(c *gin.Context) (schedule models.Schedule, recipes []
 
 	return
 }
+
 func handleError(c *gin.Context, err error) {
 	error := err.Error()
 	switch {
