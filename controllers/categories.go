@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"recipiary/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 type CreateCategoryInput struct {
@@ -26,7 +27,7 @@ func IndexCategories(c *gin.Context) {
 
 // INDEX
 func GetCategory(c *gin.Context) {
-	//Get record
+	// Get record
 	var category models.Category
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -54,7 +55,7 @@ func CreateCategory(c *gin.Context) {
 
 // UPDATE
 func UpdateCategory(c *gin.Context) {
-	//Get record
+	// Get record
 	var category models.Category
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -73,7 +74,7 @@ func UpdateCategory(c *gin.Context) {
 }
 
 func DeleteCategory(c *gin.Context) {
-	//Get record
+	// Get record
 	var category models.Category
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
