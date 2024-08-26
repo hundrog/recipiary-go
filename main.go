@@ -1,17 +1,32 @@
 package main
 
 import (
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"recipiary/auth"
 	"recipiary/controllers"
 	"recipiary/models"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	_ "github.com/joho/godotenv/autoload"
+	"github.com/supertokens/supertokens-golang/supertokens"
 )
 
 func main() {
-	r := gin.Default()
-	r.Use(cors.Default())
 	models.Connect()
+
+	auth.Init()
+	r := gin.Default()
+	// CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173"},
+		AllowMethods: []string{"GET", "POST", "DELETE", "PUT", "OPTIONS"},
+		AllowHeaders: append([]string{"content-type"},
+			supertokens.GetAllCORSHeaders()...),
+		AllowCredentials: true,
+	}))
+	r.Use(auth.SuperTokens())
+	r.Use(auth.VerifySession())
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
