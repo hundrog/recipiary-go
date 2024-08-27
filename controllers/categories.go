@@ -20,7 +20,7 @@ type UpdateCategoryInput struct {
 // INDEX
 func IndexCategories(c *gin.Context) {
 	var categories []models.Category
-	models.DB.Find(&categories)
+	models.DB.Where("user_id = ?", CurrentUserID(c)).Find(&categories)
 
 	c.JSON(http.StatusOK, gin.H{"data": categories})
 }

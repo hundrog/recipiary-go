@@ -22,7 +22,10 @@ type UpdateScheduleInput struct {
 func IndexSchedules(c *gin.Context) {
 	var schedules []models.Schedule
 	today := time.Now().Format("2006-01-02")
-	models.DB.Preload("Recipes").Order("start_date").Where("final_date > ?", today).Find(&schedules)
+	models.DB.Preload("Recipes").Order("start_date").
+		Where("final_date > ?", today).
+		Where("schedules.user_id = ?", CurrentUserID(c)).
+		Find(&schedules)
 
 	c.JSON(http.StatusOK, gin.H{"data": schedules})
 }

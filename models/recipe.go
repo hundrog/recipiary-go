@@ -9,6 +9,7 @@ type Recipe struct {
 	ImageUrl     string
 	Ingredients  []Ingredient `gorm:"many2many:recipe_ingredients;"`
 	Instructions []Instruction
+	UserID       string
 }
 
 type RecipeIngredients struct {
@@ -22,4 +23,5 @@ type Instruction struct {
 	Content  string
 	RecipeID int
 	Position int `default:"0"`
+	UserID   string
 }

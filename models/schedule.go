@@ -1,8 +1,9 @@
 package models
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Schedule struct {
@@ -10,4 +11,5 @@ type Schedule struct {
 	StartDate time.Time
 	FinalDate time.Time
 	Recipes   []Recipe `gorm:"many2many:schedule_recipes;"`
+	UserID    string
 }

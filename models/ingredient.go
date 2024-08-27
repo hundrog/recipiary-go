@@ -8,4 +8,5 @@ type Ingredient struct {
 	Portion    string
 	CategoryId int
 	Category   Category
+	UserID     string
 }

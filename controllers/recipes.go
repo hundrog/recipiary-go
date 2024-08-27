@@ -22,14 +22,14 @@ type UpdateRecipeInput struct {
 // INDEX
 func IndexRecipes(c *gin.Context) {
 	var recipes []models.Recipe
-	models.DB.Preload("Ingredients.Category").Find(&recipes)
+	models.DB.Preload("Ingredients.Category").Where("recipes.user_id = ?", CurrentUserID(c)).Find(&recipes)
 
 	c.JSON(http.StatusOK, gin.H{"data": recipes})
 }
 
 // GET
 func GetRecipe(c *gin.Context) {
-	//Get record
+	// Get record
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -65,7 +65,7 @@ func CreateRecipe(c *gin.Context) {
 
 // UPDATE
 func UpdateRecipe(c *gin.Context) {
-	//Get record
+	// Get record
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
@@ -88,7 +88,7 @@ func UpdateRecipe(c *gin.Context) {
 }
 
 func DeleteRecipe(c *gin.Context) {
-	//Get record
+	// Get record
 	var recipe models.Recipe
 	if err := models.DB.First(&recipe, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
