@@ -22,8 +22,8 @@ func Init() {
 		},
 		AppInfo: supertokens.AppInfo{
 			AppName:         "recipiary",
-			APIDomain:       "http://localhost:8080",
-			WebsiteDomain:   "http://localhost:5173",
+			APIDomain:       os.Getenv("SUPERTOKENS_API_DOMAIN"),
+			WebsiteDomain:   os.Getenv("SUPERTOKENS_WEB_DOMAIN"),
 			APIBasePath:     &apiBasePath,
 			WebsiteBasePath: &websiteBasePath,
 		},

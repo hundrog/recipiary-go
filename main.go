@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"recipiary/auth"
 	"recipiary/controllers"
 	"recipiary/models"
@@ -19,20 +20,19 @@ func main() {
 	r := gin.Default()
 	// CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:5173"},
+		AllowOrigins: []string{os.Getenv("SUPERTOKENS_WEB_DOMAIN")},
 		AllowMethods: []string{"GET", "POST", "DELETE", "PUT", "OPTIONS"},
 		AllowHeaders: append([]string{"content-type"},
 			supertokens.GetAllCORSHeaders()...),
 		AllowCredentials: true,
 	}))
-	r.Use(auth.SuperTokens())
-	r.Use(auth.VerifySession())
-
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
+	r.Use(auth.SuperTokens())
+	r.Use(auth.VerifySession())
 
 	r.GET("/categories", controllers.IndexCategories)
 	r.POST("/categories", controllers.CreateCategory)
@@ -77,5 +77,5 @@ func main() {
 	r.DELETE("/schedules/:id/recipes", controllers.DeleteScheduleRecipes)
 	r.DELETE("/schedules/:id/clear", controllers.ClearScheduleRecipes)
 
-	r.Run() // listen and serve on 0.0.0.0:8080
+	r.Run()
 }
