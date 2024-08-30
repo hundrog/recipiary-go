@@ -64,8 +64,6 @@ func main() {
 	r.PATCH("/recipes/:id/instructions/position", controllers.UpdateInstructionsOrder)
 	r.DELETE("/recipes/:id/instructions/:instructionId", controllers.DeleteInstruction)
 
-	r.GET("/images", controllers.SearchPhotos)
-
 	r.GET("/schedules", controllers.IndexSchedules)
 	r.POST("/schedules", controllers.CreateSchedule)
 	r.GET("/schedules/:id", controllers.GetSchedule)
